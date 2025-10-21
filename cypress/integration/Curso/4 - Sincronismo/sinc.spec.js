@@ -22,7 +22,7 @@ describe('Esportes', ()=>{
 
     })
 
-    it.only('deve fazer retrys', ()=>{
+    it('deve fazer retrys', ()=>{
 
         cy.get('#buttonDelay').click();
         cy.get('#novoCampo')
@@ -31,7 +31,7 @@ describe('Esportes', ()=>{
         
     })
 
-    it.only('Uso do Find', () => {
+    it('Uso do Find', () => {
         
         cy.get('#buttonList').click();
         cy.get('#lista li')
@@ -47,7 +47,7 @@ describe('Esportes', ()=>{
 
     })
 
-    it.only('Uso do Timeout', () =>{
+    it('Uso do Timeout', () =>{
         // default de timeout do cypress é de 4segundos. Para alterar este valor, veja no arquivo cypress.json
 
         // cy.get('#buttonDelay').click();
@@ -62,6 +62,24 @@ describe('Esportes', ()=>{
         cy.get('#lista li span',{timeout:30000})
             .should('have.length',2)
 
+    })
+
+    it('Click retry', ()=>{
+        cy.get('#buttonCount')
+            .click()
+            .click()
+            .should('have.value','111');
+    })
+
+    it.only('Should vs then', () =>{
+        //cy.get('#buttonListDOM').click();
+        cy.get('#buttonListDOM').then($el =>{ //.should fica sendo executado até que a acertiva seja confirmada. O then aguarda o get concluir;
+            // .should('have.lenght',1)
+            // console.log($el)
+            expect($el).to.have.length(1);
+            return 2
+        }).and('eq',2)
+    .and('not.have.id','buttonListDOM')
     })
 
 })

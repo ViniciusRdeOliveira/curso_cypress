@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 describe('Cypress basics', () => {
-    it('Should visit a page and assert title', () => {
+    it.only('Should visit a page and assert title', () => {
         cy.visit('https://wcaquino.me/cypress/componentes.html')//cy é uma variavel que deve ser utilizada em todos os testes.
         
         // const title = cy.title();
@@ -14,11 +14,15 @@ describe('Cypress basics', () => {
             .should('be.equal', 'Campo de Treinamento')
             .and('contain', 'Campo');
 
+        cy.title().then(title =>{ //tanto then como should tratan promisses.
+            console.log(title)
+        })
+
         //TODO imprimir log no console
         //TODO escrever title em um campo de texto    
     })
 
-    it.only('Should find and interact with an element', () =>{
+    it('Should find and interact with an element', () =>{
         cy.visit('https://wcaquino.me/cypress/componentes.html');
         
         // cy.get('#buttonSimple').click();
