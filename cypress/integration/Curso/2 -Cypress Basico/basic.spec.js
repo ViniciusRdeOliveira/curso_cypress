@@ -14,12 +14,25 @@ describe('Cypress basics', () => {
             .should('be.equal', 'Campo de Treinamento')
             .and('contain', 'Campo');
 
-        cy.title().then(title =>{ //tanto then como should tratan promisses.
+        let syncTitle
+
+        cy.title().then(title =>{ //tanto then como should tratam promisses.
             console.log(title)
+
+            cy.get('#formNome').type(title);
+
+            syncTitle = title
         })
 
-        //TODO imprimir log no console
-        //TODO escrever title em um campo de texto    
+        cy.get('[data-cy=dataSobrenome]').then($el =>{
+            $el.val(syncTitle)
+        })
+
+        cy.get('#elementosForm\\:sugestoes').then($el =>{ //caso tenha apenas uma \ irá cusar erro.
+            cy.wrap($el).type(syncTitle)
+        })
+
+    
     })
 
     it('Should find and interact with an element', () =>{

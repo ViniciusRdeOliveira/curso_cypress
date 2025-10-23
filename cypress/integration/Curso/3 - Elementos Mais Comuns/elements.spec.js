@@ -86,13 +86,42 @@ describe('work with basic elements', () => {
             .select('2o grau completo')
             .should('have.value','2graucomp');
 
-            //TODO VALDAR AS OPÇÕES DE COMBO
+        cy.get('[data-test=dataEscolaridade]')
+            .select('1graucomp')
+            .should('have.value','1graucomp');
+
+
+            // VALDAR AS OPÇÕES DE COMBO
+
+        cy.get('[data-test=dataEscolaridade] option')
+            .should('have.length',8)
+        cy.get('[data-test=dataEscolaridade] option').then($arr =>{
+            const values = []
+            $arr.each(function() {
+                values.push(this.innerHTML)  //usamos function para poderusar o this e realiza rum push ns valores do html
+                
+            }) 
+            expect(values).to.include.members(["Superior","Mestrado"])
+       })
+
+            
     })
+
+    //VALIDAR OPÇÕES SELECIONADAS DO COMBO MULTIPLO
 
     it.only('ComboMultiplo', ()=>{
         cy.get('[data-testid=dataEsportes]')
-            .select(['natacao','Corrida']); // quando combo multiplo deve ser usado o value
+            .select(['natacao','Corrida','nada']); // quando combo multiplo deve ser usado o value
 
-          //  TODO VALIDAR OPÇÕES SELECIONADAS DO COMBO MULTIPLO
+        // cy.get('[data-testid=dataEsportes]').should('have.value',['natacao','Corrida','nada']) //erro gerado
+        cy.get('[data-testid=dataEsportes]').then($el =>{
+            expect($el.val()).to.be.deep.equal(['natacao','Corrida','nada'])
+            expect($el.val()).to.have.length(3)
+        })    
+
+         cy.get('[data-testid=dataEsportes]').invoke('val')
+         .should('eql',['natacao','Corrida','nada'])
+
+          
     })
 })
