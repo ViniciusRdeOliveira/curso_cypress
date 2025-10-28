@@ -9,7 +9,7 @@ describe('Esportes', ()=>{
     })
     
     beforeEach(() =>{ // a cada teste é executado um reload de URL (cy.visit)
-         cy.reload();
+        cy.reload();
 
     })
 
