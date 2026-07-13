@@ -1,4 +1,4 @@
-it('nada agora', function(){}) // nada está sendo executado
+it('nada agora', function(){}) // nada está sendo executado aqui
 
 /*function soma(a,b){
     return a+b;

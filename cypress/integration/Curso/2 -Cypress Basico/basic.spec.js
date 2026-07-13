@@ -8,7 +8,7 @@ describe('Cypress basics', () => {
         // console.log(title);
 
         cy.title().should('be.equal', 'Campo de Treinamento');
-        cy.title().should('contain', 'Campo');
+        cy.title().should('contain', 'Campo'); // contem parte do titulo.
 
         cy.title() // Mesma funçao que acima, porém mais performatico.
             .should('be.equal', 'Campo de Treinamento')
@@ -16,7 +16,7 @@ describe('Cypress basics', () => {
 
         let syncTitle
 
-        cy.title().then(title =>{ //tanto then como should tratam promisses.
+        cy.title().then(title =>{ //tantohttps://wcaquino.me/cypress/componentes.html then como should tratam promisses.
             console.log(title)
 
             cy.get('#formNome').type(title);
@@ -36,7 +36,7 @@ describe('Cypress basics', () => {
     })
 
     it('Should find and interact with an element', () =>{
-        cy.visit('https://wcaquino.me/cypress/componentes.html');
+        cy.visit('');
         
         // cy.get('#buttonSimple').click();
         // cy.get('#buttonSimple').should('have.value', 'Obrigado!');
@@ -48,3 +48,5 @@ describe('Cypress basics', () => {
     })
 
 })
+
+

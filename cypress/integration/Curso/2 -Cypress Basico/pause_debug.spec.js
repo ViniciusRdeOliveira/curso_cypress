@@ -10,7 +10,7 @@ describe('Cypress basics', () => {
         cy.pause() // pausa a execução do script neste ponto. Permite seguir (dar play) no resto do test diretamente no cypress
 
         cy.title().should('be.equal', 'Campo de Treinamento');
-        cy.title().debug().should('contain', 'Campo') //debug ajuda a pegar mais detalhes do campo.
+        cy.title().debug().should('contain', 'Campo').debug() //debug ajuda a pegar mais detalhes do campo.
 
         cy.title() // Mesma funçao que acima, porém mais performatico.
             .should('be.equal', 'Campo de Treinamento')

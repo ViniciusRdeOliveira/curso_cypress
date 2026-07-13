@@ -1,126 +1,86 @@
 /// <reference types="cypress" />
 
-describe('work with basic elements', () => {
-    before(() => { // antes de executar os testes irá visitar a página. Será executado antes de todos os testes
-
-
+describe('Trabalhando com elemntos basicos', () => {
+    
+    before(() =>{ //executa antes do primeiro teste
         cy.visit('https://wcaquino.me/cypress/componentes.html');
     })
-    // beforeEach(() =>{
-    //     cy.visit('https://wcaquino.me/cypress/componentes.html');
-    // }) //before each executa todas as vezes antes de cada teste (cada 'it')
-
-    it('Text', () => {
-        // cy.visit('https://wcaquino.me/cypress/componentes.html');
-        //cy.get('body').should('contain', 'Cuidado');
-        //cy.get('span').should('contain', 'Cuidado');
-        cy.get('.facilAchar').should('contain', 'Cuidado')
-       // cy.get('.facilAchar').should('have.text', 'Cuidado') // have.text não aceita parte do texto, apenas texto completo
+    beforeEach(() =>{ //executa antes de cada teste
+        cy.reload(); //recarrega a página antes de cada teste. NEste caso aqui usado para limpar os campos
     })
 
-    it('links', () => {
-        // cy.visit('https://wcaquino.me/cypress/componentes.html');
-        cy.get('[href="#"]').click()
-        cy.get('#resultado').should('have.text','Voltou!'); //get busca por elemento, id.
+    it('Texto',() => {
+      //  cy.visit('https://wcaquino.me/cypress/componentes.html');
+        cy.get('body').should('contain','Cuidado');
+        cy.get('span').should('contain','Cuidado'); // Um pouco mais acertivo a busca.
+        cy.get('.facilAchar').should('have.text','Cuidado onde clica, muitas armadilhas...');// Mais acertivo ainda, pois busca o texto exato.
+        cy.get('.facilAchar').should('contain.text','Cuidado') //Diferente da busca acima que valida o texto exato, o contain busca apenas parte do texto.
+    })
 
-        cy.reload(); // recarreg a página
+    it('Links', () => {
+        //cy.visit('https://wcaquino.me/cypress/componentes.html');
+        //cy.get('a').click(); durante alguma atualização do curso o site mudou e o link não é mais o único da pagina
+        cy.get('[href="#"]').click();
+        cy.get('#resultado').should('have.text','Voltou!');
 
-        cy.get('#resultado').should('have.not.text','Voltou!');
-
-        cy.contains('Voltar').click() 
-        cy.get('#resultado').should('have.text','Voltou!');// contains usa busca pelo texto em tela
+        cy.reload() //recarrega a página // ao recarregar a página o texto volta ao normal
+        cy.get('#resultado').should('not.have.text','Voltou!'); // validando que o texto ainda não foi aplicado
+        cy.contains('Voltar').click(); // clicando no botão
+        cy.get('#resultado').should('have.text','Voltou!'); //Validando que após clicar no botão o texto foi exibido novamente.
 
     })
 
-    it('TextFields', () => {
-        cy.get('#formNome').type('Cypress Test'); // type serve para escrever no campo form
-        cy.get('#formNome').should('have.value','Cypress Test');
-    
-        cy.get('#elementosForm\\:sugestoes') // ao ter : deve adicionar o \\
+    it('Campos de Texto', () =>{
+        cy.get('#formNome').type('Cypress Test');
+        //cy.get('#formNome').should('have.text','Cypress Test'); 'have.text' não funciona para campos de texto, pois o valor do campo não é o mesmo que o texto do campo.
+        cy.get('#formNome').should('have.value','Cypress Test'); // Validando o valor do campo de texto.
+
+        cy.get('#elementosForm\\:sugestoes')
             .type('textarea')
             .should('have.value', 'textarea')
 
-        cy.get('#tabelaUsuarios > :nth-child(2) > :nth-child(1) > :nth-child(6) > input')
-        .type('???')
+            cy.get('#tabelaUsuarios > :nth-child(2) > :nth-child(1) > :nth-child(6) > input')
+            .type('???').type('???')
 
-        cy.get('[data-cy=dataSobrenome]')
-            .type('Teste12345{backspace}{backspace}') //{backspace} paga o caractere
-            .should('have.value', 'Teste123')
+            cy.get('[data-cy=dataSobrenome]')
+                .type('Teste12345{backspace}{backspace}', { delay: 200 })  // backspace apaga o último caractere digitado
+                .should('have.value', 'Teste123') // validando que os dois últimos caracteres foram apagados
 
-            cy.get('#elementosForm\\:sugestoes') // ao ter : deve adicionar o \\
-            .clear() // limpa o campo
-            .type('Erro{selectall}acerto', {delay:100}) 
-            .should('have.value', 'acerto')
+                cy.get('#elementosForm\\:sugestoes')
+                    .clear() // limpa o campo
+                    .type('Erro{selectall}acerto', { delay: 100 }) //selectall seleciona todo o texto do campo, e o acerto substitui o texto selecionado.
+                    .should('have.value', 'acerto') // validando que o texto do campo foi substituido pelo acerto
+                    
     })
 
-    it('RadioButton' ,()=>{ //validando a marcação de radio button
-        cy.get('#formSexoFem')
-            .click()
-            .should('be.checked');
-        cy.get('#formSexoMasc')
-            .should('not.be.checked');
-
-        cy.get("[name='formSexo']")
-            .should('have.length',2) //verificando se há 2 radio buttons com o name formsexo        
-
-    })
-
-    it('CheckBox',()=>{
-        cy.get('#formComidaPizza')
-            .click()
-            .should('be.checked');
-
-        cy.get('[name=formComidaFavorita]')
-            .click({multiple:true}) // caso não tenha o parametro multiple dará erro pois há mais de 1 elemento com o mesmo name.
+    it('RadioButton',() =>{
+        cy.get('#formSexoFem').click()
+            .should('be.checked') //valida se o radio foii selecionado
+        cy.get('#formSexoMasc').should('not.be.checked') //radio permite apenas uma seleção, então validamos se a outra opção não está selecionada.
         
-
-        cy.get('#formComidaPizza')
-            .should('not.be.checked');
-            
-        cy.get('#formComidaCarne')
-            .should('be.checked');
+        cy.get("[name ='formSexo']").should('have.length',2) //validando que existem apenas 2 radios com o mesmo name.
     })
 
-    it.only('Combo', ()=>{
-        cy.get('[data-test=dataEscolaridade]')
-            .select('2o grau completo')
-            .should('have.value','2graucomp');
+    it('checkbox',() =>{
+        cy.get('#formComidaPizza').click()
+            .should('be.checked') //valida se o checkbox foii selecionado
 
-        cy.get('[data-test=dataEscolaridade]')
-            .select('1graucomp')
-            .should('have.value','1graucomp');
-
-
-            // VALDAR AS OPÇÕES DE COMBO
-
-        cy.get('[data-test=dataEscolaridade] option')
-            .should('have.length',8)
-        cy.get('[data-test=dataEscolaridade] option').then($arr =>{
-            const values = []
-            $arr.each(function() {
-                values.push(this.innerHTML)  //usamos function para poderusar o this e realiza rum push ns valores do html
-                
-            }) 
-            expect(values).to.include.members(["Superior","Mestrado"])
-       })
-
-            
+        //cy.get('[name=formComidaFavorita]').click() gera erro pois tenta clicar em todos os checkbox, e não é permitido selecionar todos os checkbox
+        cy.get('[name=formComidaFavorita]').click({multiple:true}) // para clicar em todos os elementos precisa passar o parametro multiple:true..
+        cy.get('#formComidaPizza').should('not.be.checked') //validando que o checkbox pizza não está selecionado, pois o já havia sido selecionado no teste anterior.
+        cy.get('#formComidaVegetariana').should('be.checked') //validando que o checkbox vegetariano está selecionado
     })
 
-    //VALIDAR OPÇÕES SELECIONADAS DO COMBO MULTIPLO
-
-    it.only('ComboMultiplo', ()=>{
-        cy.get('[data-testid=dataEsportes]')
-            .select(['natacao','Corrida','nada']); // quando combo multiplo deve ser usado o value
-
-        // cy.get('[data-testid=dataEsportes]').should('have.value',['natacao','Corrida','nada']) //erro gerado
-        cy.get('[data-testid=dataEsportes]').then($el =>{
-            expect($el.val()).to.be.deep.equal(['natacao','Corrida','nada'])
-            expect($el.val()).to.have.length(3)
-        })    
-
-         cy.get('[data-testid=dataEsportes]').invoke('val')
-         .should('eql',['natacao','Corrida','nada'])
-
+    it('combobox', () =>{
+        cy.get('[data-test=dataEscolaridade]').select('2o grau completo')
+            .should('have.value', '2graucomp') // este é o valor correto do combobox selecionado. (ver no html)
+        cy.get('[data-test=dataEscolaridade]').select('1graucomp') // Para seleção, pode-se mandar o value também
+            .should('have.value', '1graucomp') // este é o valor (value) correto do combobox selecionado. (ver no html)
     })
+
+    it.only('Combo Multiplo', () =>{
+        cy.get('[data-testid=dataEsportes]').select(['natacao','Corrida']) //Para combo multiplo se usa um Array com os Values (note que o 'n' é minusculo como no value)
+    
+    })
+
 })
