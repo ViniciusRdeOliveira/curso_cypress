@@ -78,7 +78,7 @@ describe('Trabalhando com elemntos basicos', () => {
             .should('have.value', '1graucomp') // este é o valor (value) correto do combobox selecionado. (ver no html)
     })
 
-    it.only('Combo Multiplo', () =>{
+    it('Combo Multiplo', () =>{
         cy.get('[data-testid=dataEsportes]').select(['natacao','Corrida']) //Para combo multiplo se usa um Array com os Values (note que o 'n' é minusculo como no value)
     
     })

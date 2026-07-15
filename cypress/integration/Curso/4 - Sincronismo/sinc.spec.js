@@ -1,85 +1,55 @@
 /// <reference types="cypress" />
 
-describe('Esportes', ()=>{
+describe('Sincronismo', ()=>{
 
-    before(() => { // antes de executar os testes irá visitar a página. Será executado antes de todos os testes
+    before(() => { 
 
         cy.visit('https://wcaquino.me/cypress/componentes.html');
   
     })
     
-    beforeEach(() =>{ // a cada teste é executado um reload de URL (cy.visit)
+    beforeEach(() =>{ 
         cy.reload();
 
     })
 
-    it('deve aguardar o elelmento estar disponivel', ()=>{
-
+    it('Aguardando elemento estar disponível', () =>{ // o cypress por padrão já espera o elemento estar disponível, mas podemos usar o should para validar se o elemento existe ou não.
+        cy.get('#novoCampo').should('not.exist'); 
+        cy.get('#buttonDelay').click();
         cy.get('#novoCampo').should('not.exist');
-        cy.get('#buttonDelay').click();
-        cy.get('#novoCampo').should('exist');
-        cy.get('#novoCampo').type('funciona');
-
+        cy.get('#novoCampo').should('exist')
+            .type('funciona');
     })
 
-    it('deve fazer retrys', ()=>{
-
+     it.only('Deve fazer retrys', () =>{ // o cypress por padrão já espera o elemento estar disponível, mas podemos usar o should para validar se o elemento existe ou não.
+       
         cy.get('#buttonDelay').click();
-        cy.get('#novoCampo')
-            .should('exist')
-            .should('not.exist'); // nao se deve agrupar duas acertivas uma contraditória da outra.           
-        
+        cy.get('#novoCampo').should('not.exist')
+            .should('exist'); // Irá gerar erro pois o elemento não existe, mas o cypress irá fazer retrys até o tempo limite de 4 segundos, e se o elemento não aparecer nesse tempo, irá gerar erro.
     })
 
-    it('Uso do Find', () => {
-        
+    it.only('Uso do find', ()=> {
         cy.get('#buttonList').click();
-        cy.get('#lista li')
+        cy.get('#lista > li')
             .find('span')
             .should('contain', 'Item 1');
+        cy.get('#lista > li > span')
 
-        //  cy.get('#lista li')
-        //     .find('span')
-        //     .should('contain', 'Item 2');
+            .should('contain', 'Item 2'); // Irá gerar erro pois o elemento não existe, mas o cypress irá fazer retrys até o tempo limite de 4 segundos, e se o elemento não aparecer nesse tempo, irá gerar erro.
 
-        cy.get('#lista li span') // como os 2 gets possuiam a mesma "regra, a segunda precisa ser completa."
-            .should('contain','Item 2');
 
-    })
 
-    it('Uso do Timeout', () =>{
-        // default de timeout do cypress é de 4segundos. Para alterar este valor, veja no arquivo cypress.json
+     })
 
-        // cy.get('#buttonDelay').click();
-        // cy.get('#novoCampo', {timeout:1000}).should('exist'); //definindo um timeout de 1 segundo para gerar uma falha.
-
-        // cy.get('#buttonList').click();
-        // // cy.wait(5000); // para a execução por tempo definido. Porém esta espera fixa pode causar problemas. Use apenas se você souber o tempo exato de espera.
-        // cy.get('#lista li span',{timeout:30000}) //timeout é o tempo de espera para o cypress gerar o erro. Mas se a acertiva foi validada antes, o tempo é encerrado.
-        //     .should('contain','Item 2');
-
+   it.only('Lista DOM', ()=> {
        cy.get('#buttonListDOM').click();
-        cy.get('#lista li span',{timeout:30000})
-            .should('have.length',2)
+        cy.get('#lista > li')
+            .find('span')
+            .should('contain', 'Item 1');
+        cy.get('#lista > li > span')
+
+            .should('contain', 'Item 2');
 
     })
-
-    it('Click retry', ()=>{
-        cy.get('#buttonCount')
-            .click()
-            .click()
-            .should('have.value','111');
-    })
-
-    it.only('Should vs then', () =>{
-        //cy.get('#buttonListDOM').click();
-        cy.get('#buttonListDOM').then($el =>{ //.should fica sendo executado até que a acertiva seja confirmada. O then aguarda o get concluir;
-            // .should('have.lenght',1)
-            // console.log($el)
-            expect($el).to.have.length(1);
-            return 2
-        }).and('eq',2)
-    .and('not.have.id','buttonListDOM')
-    })
-
+    
 })
