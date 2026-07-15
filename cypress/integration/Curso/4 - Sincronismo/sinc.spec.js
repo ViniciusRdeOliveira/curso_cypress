@@ -47,9 +47,25 @@ describe('Sincronismo', ()=>{
             .find('span')
             .should('contain', 'Item 1');
         cy.get('#lista > li > span')
-
             .should('contain', 'Item 2');
 
     })
+
+    it.only('Uso do timeout', () => {
+        cy.get('#buttonDelay').click();
+        //cy.get('#novoCampo', {timeout: 1000}).should('exist'); // Irá gerar erro pois o elemento não existe, mas o cypress irá fazer retrys até o tempo limite de 1 segundo, e se o elemento não aparecer nesse tempo, irá gerar erro.
+        cy.get('#novoCampo').should('exist'); //por padrão o cypress espera 4 segundos para o elemento aparecer, mas podemos alterar esse tempo com o timeout no arquivo cypress.json com "defaultoCommandTimeout"
+        
     
+    
+    })
+
+    it.only('Uso de timeout', () => {
+        cy.wait(5000); //espera 5 segundos para executar o próximo comando
+        cy.get('#buttonListDOM').click();
+        cy.get('#lista > li > span' ,{timeout: 30000}) //espera 30 segundos para o elemento aparece, mas se aparecer antes do tempo ele segue a execuçãor
+        cy.get('#lista > li > span')
+            .should('contain', 'Item 2');
+    
+    })
 })
