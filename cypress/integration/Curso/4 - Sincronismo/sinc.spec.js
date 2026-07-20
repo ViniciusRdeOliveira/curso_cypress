@@ -68,4 +68,22 @@ describe('Sincronismo', ()=>{
             .should('contain', 'Item 2');
     
     })
+
+    it.only('Should vs then', () => {
+        cy.get('#buttonListDOM').click();
+        cy.get('#lista > li > span').then($elemento =>{
+      //  cy.get('#lista > li > span').should($elemento =>{ //should fica sendo executado ao longo da espera enquanto o then aguardou a espera do get.
+           // should('have.length', 1)
+          // console.log($elemento) 
+            expect($elemento).to.have.length(1) // o then não faz retrys, ele pega o elemento no momento que ele é chamado, e se o elemento não existir, irá gerar erro.
+        })
+        })
+
+    it.only('Should vs then', () => {
+        cy.get('#buttonListDOM').then($elemento =>{
+            // should('have.length', 1)
+          // console.log($elemento) 
+            expect($elemento).to.have.length(1) // o then não faz retrys, ele pega o elemento no momento que ele é chamado, e se o elemento não existir, irá gerar erro.
+        }).and('have.id', 'buttonListDOM')
+    })
 })

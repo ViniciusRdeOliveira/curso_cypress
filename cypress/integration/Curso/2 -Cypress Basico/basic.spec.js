@@ -16,7 +16,7 @@ describe('Cypress basics', () => {
 
         let syncTitle
 
-        cy.title().then(title =>{ //tantohttps://wcaquino.me/cypress/componentes.html then como should tratam promisses.
+        cy.title().then(title =>{ //tanto then como should tratam promisses.
             console.log(title)
 
             cy.get('#formNome').type(title);
